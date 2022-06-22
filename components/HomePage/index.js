@@ -5,9 +5,7 @@ import Register from '../AuthForm/Register'
 const HomePage = () => {
 
   return (
-    <div>
-      <AuthForm/>
-    </div>
+   <AuthForm/>
   )
 }
 
