@@ -6,15 +6,18 @@
 
 /*custom scrollbar */
 ::-webkit-scrollbar {
-  width: 0.5rem;
+  width: 0.2rem;
 }
+
 ::-webkit-scrollbar-track {
   background: #f5f5f5;
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgb(118, 40, 166);
   border-radius: 10rem;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(190, 40, 115);
 }
@@ -37,6 +40,18 @@ a {
   box-sizing: border-box;
 }
 
+
 .sansWork {
   font-family: 'Work Sans', sans-serif;
 }
+
+.addRadius {
+  border-radius: 4rem;
+}
+
+.ant-modal-content {
+  overflow-y: auto;
+  border-radius: 1rem
+}
+
+

@@ -1,13 +1,50 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Modal, Upload } from 'antd';
+import { Modal, Upload, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
-
 import gsap from 'gsap'
-const Register = () => {
+import useAuth from '../../utils/useAuth';
+import Notification from '../../utils/notification';
+import { useRouter } from 'next/router';
+
+const Register = ({ setSwitchForm }) => {
+    const { register } = useAuth();
+    const [error, setError] = useState([])
+    const [success, setSuccess] = useState('')
     const [avatar, setAvatar] = useState('');
+    const [name, setName] = useState('');
+    const [gender, setGender] = useState('')
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [email, setEmail] = useState('');
     const [previewVisible, setPreviewVisible] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const credentials = { email, name, password, avatar, confirmPassword, gender }
+        register(credentials, setError, setSuccess, setLoading)
+
+
+    }
+    useEffect(() => {
+        if (success) {
+            //to switch to login form
+            setSwitchForm(false)
+        }
+    }, [success])
+
+
+    useEffect(() => {
+        if (error) {
+            error.forEach(err => {
+                Notification(err, 'error')
+                setError('')
+            })
+        }
+    }, [error])
+
 
 
 
@@ -39,7 +76,21 @@ const Register = () => {
         });
     const handleCancel = () => setPreviewVisible(false);
 
-    const handleChange = ({ file }) => { setAvatar(file) };
+    const handleChange = async ({ file }) => {
+        const result = await getBase64(file?.originFileObj);
+        setAvatar(result)
+    };
+
+    const isChecked = (value) => {
+        return value === gender
+    }
+    useEffect(() => {
+        console.log('Gender', gender)
+    }, [gender])
+
+
+
+
 
 
 
@@ -63,6 +114,7 @@ const Register = () => {
             </div>
         </div>
     );
+
     return (
 
         <div id='registerForm' className="md:p-12 md:mx-6 opacity-[0]">
@@ -74,52 +126,85 @@ const Register = () => {
                 />
                 <h4 id='loginForm' className="text-xl font-semibold mt-1 mb-12 pb-1">qqICK in securing and delivering your messages</h4>
             </div>
-            <form  className=''>
+            <form className='' onSubmit={handleSubmit}>
                 <p className="mb-4">Create a new account</p>
                 <div className="mb-4">
                     <input
                         type="text"
-                        className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                        className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded-xl transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         id="exampleFormControlInput1"
                         placeholder="Username"
+                        onChange={(e) => setName(e.target.value)}
+                        value={name}
                     />
                 </div>
                 <div className="mb-4">
                     <input
                         type="text"
-                        className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                        className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded-xl transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         id="exampleFormControlInput1"
                         placeholder="Email"
+                        onChange={(e) => setEmail(e.target.value)}
+                        value={email}
                     />
                 </div>
                 <div className="mb-4">
                     <input
                         type="password"
-                        className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                        className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded-xl transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         id="exampleFormControlInput1"
                         placeholder="Password"
+                        onChange={(e) => setPassword(e.target.value)}
+                        value={password}
                     />
                 </div>
                 <div className="mb-4">
                     <input
                         type="password"
-                        className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                        className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded-xl transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         id="exampleFormControlInput1"
                         placeholder="Confirm Password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        value={confirmPassword}
                     />
                 </div>
-                <h1>Upload your avatar</h1>
-                {
-                    <ImgCrop rotate>
+                <div className='flex flex-col  '>
+                    {
+                        ['male', 'female'].map(g => (
+                            <div className='items-center flex my-1' >
+                                <input
+                                    type='radio'
+                                    name={g}
+                                    checked={isChecked(g)}
+                                    value={g}
+                                    onChange={e => setGender(e.target.value)}
+                                    className='border-2 p-2 appearance-none border-purple-500 checked:ring-2 rounded-full w-4 h-4 mr-2 checked:bg-purple-500'
+                                />
+                                <label className='capitalize'>
+                                    {g}
+                                </label>
+                            </div>
 
+
+                        ))
+                    }
+                </div>
+                <h1 className='mt-2'>Upload your avatar</h1>
+                {
+                    <ImgCrop  rotate modalOk='Save'>
 
                         <Upload
                             listType="picture-card"
                             multiple={false}
                             onPreview={handlePreview}
                             onChange={handleChange}
+                            maxCount={1}
+
+
                         >
-                            {!avatar ? (uploadButton) : null}
+                            {uploadButton}
+
+
                         </Upload>
                     </ImgCrop>
                 }
@@ -134,15 +219,14 @@ const Register = () => {
                 </Modal>
                 <div className="text-center pt-1 mb-12 pb-1">
                     <button
-                        className="inline-block px-6 py-2.5 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
-                        type="button"
-                        data-mdb-ripple="true"
-                        data-mdb-ripple-color="light"
+                        className="rounded-xl inline-block px-6 py-2.5 text-white font-medium text-xs leading-tight uppercase shadow-md hover:bg-blue-700 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
                         style={{
 
                             background: ' linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593)'
 
                         }}
+                        type='submit'
+                        disabled={loading ? true : false}
 
                     >
                         Sign Up
@@ -160,3 +244,4 @@ const Register = () => {
 }
 
 export default Register
+

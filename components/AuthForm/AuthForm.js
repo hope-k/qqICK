@@ -29,18 +29,21 @@ const AuthForm = () => {
 
 
     return (
-        <section className="h-full gradient-form bg-red-100 md:h-full m-4 rounded-3xl">
-            <div className="container py-12 px-6 h-full">
-                <div className="flex justify-center items-center flex-wrap h-full g-6 text-gray-800">
+        <section style={{
+            background: 'linear-gradient(to right, #EECC24, #d8363a, #87274C, #4C45B4)'
+        }
+        } className="h-full gradient-form md:h-full m-4 rounded-xl">
+            <div className="container py-12 px-6 h-full ">
+                <div className=" flex justify-center items-center flex-wrap h-full g-6 text-gray-800">
                     <div className="xl:w-10/12">
-                        <div className="block bg-white shadow-lg rounded-lg">
-                            <div className="lg:flex lg:flex-wrap g-0">
+                        <div className="block bg-white shadow-lg rounded-3xl">
+                            <div className=" lg:flex lg:flex-wrap g-0">
                                 <div className="lg:w-6/12 px-4 md:px-0 relative">
                                     <div className='flex w-full justify-center'>
                                         <div className='bg-black rounded-2xl w-[14.7rem] flex text-white justify-evenly items-center  relative first-letter:'>
                                             <div id='slider' style={{
                                                 height: 'calc(100% - .3rem)', background: ' linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593)'
-                                            }} className={'absolute bg-red-400  w-[50.6%]  rounded-2xl  left-[.14rem] border-b border-black'}>
+                                            }} className={'absolute bg-red-400  w-[50.6%]  rounded-2xl  left-[.14rem] border-b border-teal-500 border-[1.5px]'}>
 
                                             </div>
 
@@ -54,7 +57,7 @@ const AuthForm = () => {
                                     </div>
                                     {
                                         switchForm ?
-                                            <Register />
+                                            <Register setSwitchForm={setSwitchForm}/>
                                             :
                                             <Login />
 

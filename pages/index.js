@@ -7,3 +7,21 @@ export default function Home() {
     </Layout>
   )
 }
+
+export async function getServerSideProps({ req }) {
+  const token  = req.cookies.token
+  // redirect to chat page if token is present
+  if (token) {
+    return {
+      redirect: {
+        destination: '/chat',
+        permanent: false
+      }
+    }
+  }
+  return {
+    props: { }
+  }
+  
+
+}
