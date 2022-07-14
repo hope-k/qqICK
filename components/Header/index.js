@@ -9,7 +9,7 @@ import { Dropdown, Menu, Space, Badge } from 'antd';
 import moment from 'moment'
 
 
-const Header = ({ setSelectedChat }) => {
+const Header = ({ setSelectedChat, setIsNotification }) => {
     const { user: currentUser } = useAuth()
     const [isProfileVisible, setProfileVisible] = useState(false)
     const { notifications } = useNotifications();
@@ -30,7 +30,7 @@ const Header = ({ setSelectedChat }) => {
                     notifications?.map((notification, index) => ({
                         key: index,
                         label: (
-                            <div onClick={() => setSelectedChat(notification?.message?.chat)} key={index} className='duration-300 rounded-xl hover:bg-purple-200 hover:border hover:border-purple-500  p-5 capitalize bg-purple-50 mx-[-.4rem]'>
+                            <div onClick={() => {setIsNotification(true); setSelectedChat(notification?.message?.chat)}} key={index} className='duration-300 rounded-xl hover:bg-purple-200 hover:border hover:border-purple-500  p-5 capitalize bg-purple-50 mx-[-.4rem]'>
                                 {
                                     notification?.message?.chat?.isGroupChat ? (
                                         <span className='block text-[.7rem] font-semibold border w-fit rounded-md border-purple-500 bg-purple-50 p-[.03rem] px-1'>Group</span>) : (<span className='block text-[.7rem] font-semibold border w-fit rounded-md border-purple-500 bg-purple-50 p-[.03rem] px-1'>Message</span>)

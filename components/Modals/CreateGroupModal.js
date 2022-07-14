@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ExpansionPanel, Avatar } from '@chatscope/chat-ui-kit-react'
-import { Modal } from 'antd'
+import { Modal, Upload } from 'antd'
 import { IoIosCloseCircleOutline } from 'react-icons/io'
 import Skeleton from 'react-loading-skeleton'
 
 const CreateGroupModal = ({
     isModalVisible,
-    addUserToGroupConfirm,
+    createGroup,
     handleCancel,
     addUserToGroup,
     groupName,
@@ -16,16 +16,52 @@ const CreateGroupModal = ({
     usersToAdd,
     removeUser,
     groupSearchLoading,
-    users
-
-
-
-
+    users,
+    setGroupImage,
+    groupImage
 
 
 }) => {
+    const getBase64 = (file) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        console.log('file', file)
+        reader.onload = async () => {setGroupImage(await reader.result)};
+        reader.onerror = (error) => Promise.reject(error);
+
+    }
+
+    const handleChange = async ({ file }) => {
+        await getBase64(file?.originFileObj);
+
+    };
+    const uploadButton = (
+        <div>
+            +
+            <div
+                style={{
+                    marginTop: 8,
+                }}
+            >
+                Upload Group Image
+            </div>
+        </div>
+    );
     return (
-        <Modal maskStyle={{ backgroundColor: 'rgba(0,0,0,0.7)' }} cancelButtonProps={{ className: 'border-none bg-red-500 rounded-lg text-white hover:bg-red-700 hover:text-white ' }} okButtonProps={{ className: 'border-none bg-purple-500 rounded-lg text-white hover:bg-purple-700 hover:text-white ' }} closable okText='Create Group' title='Create a group chat' onCancel={handleCancel} onOk={addUserToGroupConfirm} visible={isModalVisible} className='rounded-3xl'>
+
+        <Modal maskStyle={{ backgroundColor: 'rgba(0,0,0,0.7)' }} cancelButtonProps={{ className: 'border-none bg-red-500 rounded-lg text-white hover:bg-red-700 hover:text-white ' }} okButtonProps={{ className: 'border-none bg-purple-500 rounded-lg text-white hover:bg-purple-700 hover:text-white ' }} closable okText='Create Group' title='Create a group chat' onCancel={handleCancel} onOk={createGroup} visible={isModalVisible} className='rounded-3xl'>
+            <div>
+                <Upload
+                    listType="picture-card"
+                    multiple={false}
+                    onChange={handleChange}
+                    maxCount={1}
+                    onCancel={() => setGroupImage('')}
+                >
+                    {uploadButton}
+
+                </Upload>
+            </div>
             <div>
                 <input
                     type='text'
@@ -46,11 +82,11 @@ const CreateGroupModal = ({
 
                 />
             </div>
-            <div className='flex flex-wrap'>
+            <div className='flex flex-wrap duration-500'>
                 {
                     usersToAdd?.map(user => (
-                        <div className=' bg-purple-500 p-2 w-fit rounded-lg ml-2 my-2'>
-                            <div key={user?._id} className='flex items-center text-white capitalize'><Avatar className='mr-1' src={user?.avatar || '/defaultmaleavatar.png'} /> {user?.name} <IoIosCloseCircleOutline onClick={() => removeUser(user)} className='cursor-pointer text-[1.2rem] ml-1' /></div>
+                        <div className=' bg-purple-500 p-2 w-fit rounded-lg ml-2 my-2 duration-500'>
+                            <div key={user?._id} className='flex duration-500 items-center text-white capitalize'><Avatar className='mr-1' src={user?.avatar || '/defaultmaleavatar.png'} /> {user?.name} <IoIosCloseCircleOutline onClick={() => removeUser(user)} className='cursor-pointer text-[1.2rem] ml-1' /></div>
                         </div>
                     ))
                 }

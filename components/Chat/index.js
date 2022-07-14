@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { Modal } from 'antd';
 import { useSWRConfig } from 'swr'
+import {useRouter} from 'next/router'
 import {
     MainContainer,
     Search,
@@ -42,8 +43,8 @@ import Messages from '../Messages';
 
 
 export default function Chat() {
+    const router = useRouter()
     const { mutate } = useSWRConfig()
-    const [addToGroupError, setAddToGroupError] = useState(null)
     const [chatLoading, setChatLoading] = useState(true)
     const { chats, accessChat } = useChat(setChatLoading);
     const { user: currentUser } = useAuth();
@@ -53,9 +54,15 @@ export default function Chat() {
     const [search, setSearch] = useState('');
     const [users, setUsers] = useState([]);
     const [error, setError] = useState('');
-    const [messageInputValue, setMessageInputValue] = useState('');
     const [groupName, setGroupName] = useState('');
-    const [addToGroupSuccess, setAddToGroupSuccess] = useState(false);
+    const [createGroupSuccess, setCreateGroupSuccess] = useState(false);
+    const [isNotification, setIsNotification] = useState(false);
+    const [groupImage, setGroupImage] = useState('')
+    const [updateGroupImage, setUpdateGroupImage] = useState('')
+    const [createGroupError, setCreateGroupError] = useState(null)
+    const [groupUpdateSuccess, setGroupUpdateSuccess] = useState(false)
+    const [groupUpdateError, setGroupUpdateError] = useState(null);
+
 
 
     const searchAllUsers = (search) => {
@@ -100,26 +107,26 @@ export default function Chat() {
         setUsersToAdd(usersToAdd.filter(u => u !== user))
     }
 
-    const addUserToGroupConfirm = () => {
-        message.loading({ content: 'Adding users to group...', key: 'add-users-to-group' })
-        API.post('/api/group-chat/create', { users: usersToAdd, groupName }).then(res => { setIsModalVisible(false); setUsersToAdd([]); setGroupName(''); setAddToGroupSuccess(true); mutate('/api/chat/index') }).catch(err => { setAddToGroupError(err.response.data.error) })
+    const createGroup = () => {
+        message.loading({ content: 'Creating group...', key: 'create-group' })
+        API.post('/api/group-chat/create', { users: usersToAdd, groupName, groupImage: groupImage }).then(res => { setIsModalVisible(false); setUsersToAdd([]); setGroupName(''); setGroupImage(''); setCreateGroupSuccess(true); mutate('/api/chat/index') }).catch(err => { console.log(err.response.data.error); setCreateGroupError(err.response.data.error) })
 
 
     }
 
     useEffect(() => {
-        if (addToGroupSuccess) {
-            message.success({ content: 'Users added to group successfully', key: 'add-users-to-group' })
-            setAddToGroupSuccess(false)
+        if (createGroupSuccess) {
+            message.success({ content: 'Group created successfully', key: 'create-group' })
+            setCreateGroupSuccess(false)
         }
-    }, [addToGroupSuccess])
+    }, [createGroupSuccess])
 
     useEffect(() => {
-        if (addToGroupError) {
-            message.error({ content: addToGroupError, key: 'add-users-to-group' })
-            setAddToGroupError(null)
+        if (createGroupError) {
+            message.error({ content: createGroupError, key: 'create-group' })
+            setCreateGroupError(null)
         }
-    }, [addToGroupError])
+    }, [createGroupError])
 
     const onlyGroupChats = chats && chats?.filter(c => c.isGroupChat === true)
     const onlyUserChats = chats && chats?.filter(c => c.isGroupChat === false)
@@ -166,29 +173,35 @@ export default function Chat() {
     }
 
 
-    const [groupUpdateSuccess, setGroupUpdateSuccess] = useState(false);
-    const [groupUpdateError, setGroupUpdateError] = useState(null);
 
     useEffect(() => {
         if (groupUpdateSuccess) {
             message.success({ content: 'Group updated successfully', key: 'group-update' })
+            setIsUpdateGroupModalVisible(false);
+            mutate('/api/chat/index');
+            mutate('')
             setGroupUpdateSuccess(false)
+
         }
+    }, [groupUpdateSuccess])
+
+    useEffect(() => {
         if (groupUpdateError) {
             message.error({ content: groupUpdateError, key: 'group-update' })
             setGroupUpdateError(null)
         }
-    }, [groupUpdateSuccess, groupUpdateError])
+    }, [groupUpdateError])
 
     const updateGroupConfirm = () => {
         message.loading({ content: 'Updating group...', key: 'group-update' })
-        API.put(`/api/group-chat/update?groupId=${selectedChat?._id}`, { groupName: updateGroupName, users: updateGroupUsers }).then(res => { setIsUpdateGroupModalVisible(false); setGroupUpdateSuccess(true); mutate('/api/chat/index') }).catch(err => { setGroupUpdateError(err.response?.data?.error) })
+        API.put(`/api/group-chat/update?groupId=${selectedChat?._id}`, { groupName: updateGroupName, users: updateGroupUsers, groupImage: updateGroupImage }).then(res => { setGroupUpdateSuccess(true); setIsUpdateGroupModalVisible(false); setSelectedChat(null); setSelectedChat(res.data.chat) }).catch(err => { console.log(err?.response?.data?.error); setGroupUpdateError(err.response?.data?.error) })
     }
 
     const [leftGroupSuccess, setLeftGroupSuccess] = useState(false);
     useEffect(() => {
         if (leftGroupSuccess) {
-            message.success({ content: 'Left group successfully', key: 'leave-group' })
+            const message = selectedChat?.isGroupChat ? 'Group left successfully' : 'Conversation deleted successfully'
+            message?.success({ content: message, key: 'leave-group' })
             setLeftGroupSuccess(false)
         }
     }, [leftGroupSuccess])
@@ -209,11 +222,11 @@ export default function Chat() {
 
     return (
         <>
-            <Header setSelectedChat={setSelectedChat} />
+            <Header setSelectedChat={setSelectedChat} isNotification={isNotification} setIsNotification={setIsNotification} />
             <div className='relative w-full h-[90vh] '>
                 <MainContainer>
                     <div style={{ scrollbarWidth: '1px' }} className={'h-full w-full md:w-[25vw] px-2 md:flex ' + (selectedChat ? 'hidden' : 'flex')}>
-                        <Sidebar className='h-full w-full md:w-[25vw]' position="left"  loading={chatLoading}>
+                        <Sidebar className='h-full w-full md:w-[25vw]' position="left" loading={chatLoading}>
                             {
                                 !chatLoading && (
                                     <div className='border-purple-500 flex  rounded-lg p-1 m-3 bg-purple-100 appearance-none border  '>
@@ -231,7 +244,7 @@ export default function Chat() {
                                     setGroupName={setGroupName}
                                     usersToAdd={usersToAdd}
                                     setUsersToAdd={setUsersToAdd}
-                                    addUserToGroupConfirm={addUserToGroupConfirm}
+                                    createGroup={createGroup}
                                     removeUser={removeUser}
                                     handleCancel={handleCancel}
                                     setGroupSearch={setGroupSearch}
@@ -239,6 +252,8 @@ export default function Chat() {
                                     users={users}
                                     addUserToGroup={addUserToGroup}
                                     groupSearchLoading={groupSearchLoading}
+                                    setGroupImage={setGroupImage}
+                                    groupImage={groupImage}
 
                                 />
 
@@ -257,8 +272,11 @@ export default function Chat() {
                                     groupSearch={groupSearch}
                                     users={users}
                                     groupSearchLoading={groupSearchLoading}
+                                    setUpdateGroupImage={setUpdateGroupImage}
+                                    updateGroupImage={updateGroupImage}
                                     leaveGroup={leaveGroup}
                                     selectedChat={selectedChat}
+                                    groupUpdateSuccess={groupUpdateSuccess}
 
                                 />
                             </div>
@@ -285,10 +303,10 @@ export default function Chat() {
                             (
                                 <Messages
                                     selectedChat={selectedChat}
-                                    messageInputValue={messageInputValue}
-                                    setMessageInputValue={setMessageInputValue}
                                     showGroupUpdateModal={showGroupUpdateModal}
                                     setSelectedChat={setSelectedChat}
+                                    isNotification={isNotification}
+                                    setIsNotification={setIsNotification}
 
                                 />
 

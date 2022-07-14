@@ -14,7 +14,7 @@ import {
 
 
 } from '@chatscope/chat-ui-kit-react'
-import { AiOutlineEdit } from 'react-icons/ai'
+import { AiOutlineEdit, AiFillEye } from 'react-icons/ai'
 import useAuth from '../../utils/useAuth'
 import useMessage from '../../utils/useMessage'
 import { message, notification } from 'antd'
@@ -29,22 +29,22 @@ const Messages = ({
     selectedChat,
     showGroupUpdateModal,
     setSelectedChat,
+    isNotification,
+
 
 }) => {
     const socket = useSocket()
     const [socketConnected, setSocketConnected] = useState(false)
     const [userTypingName, setUserTypingName] = useState('')
     const [chatId, setChatId] = useState('')
-    const { notifications, setNotifications, setLiveNotification, liveNotification } = useNotifications()
+    const { notifications, setNotifications } = useNotifications()
     const { user: currentUser } = useAuth()
     const [loadingMessages, setLoadingMessages] = useState(true)
     const [updatedMessages, setUpdatedMessages] = useState([])
-    const [sendMessageError, setSendMessageError] = useState(null)
-    const { messages, sendMessage } = useMessage(chatId, setLoadingMessages, socket, selectedChat, setUpdatedMessages, setSendMessageError);
+    const { messages, sendMessage, recipientData } = useMessage(chatId, setLoadingMessages, socket, selectedChat, setUpdatedMessages, isNotification);
     const [messageInputValue, setMessageInputValue] = useState('')
     const [typing, setTyping] = useState(false)
     const [isTyping, setIsTyping] = useState(false)
-    const { isSameSender } = chatLogic()
     const { mutate } = useSWRConfig()
     const [liveMessage, setLiveMessage] = useState(null)
     const [roomDetails, setRoomDetails] = useState('')
@@ -52,6 +52,7 @@ const Messages = ({
     const { clearUnreadMessages } = chatLogic()
     useEffect(() => {
         mutate('/api/message/chatId')
+        mutate('/api/me')
     }, [chatId])
     useEffect(() => {
         if (selectedChat) {
@@ -107,43 +108,28 @@ const Messages = ({
         text: messageInputValue
     }
 
-
-    useEffect(() => {
-        if (sendMessageError) {
-            message?.error(sendMessageError)
-        }
-    }, [sendMessageError])
-
-
-
-
-
-
+   
 
 
 
 
     useEffect(() => {
-        notifications && console.log('notifications', notifications)
-    }, [notifications])
 
-
-    useEffect(() => {
         if (liveMessage?.chat?._id === selectedChat?._id) {
             updatedMessages.push(liveMessage)
-            setLiveMessage(null)
             mutate('/api/message/chatId')
-        } else {
-            return
         }
+
     }, [selectedChat?._id, liveMessage])
+
+
 
 
     const sendYourMessage = (event) => {
         if (event.key === 'Enter') {
             if (!messageInputValue) { return }
             setIsTyping(false)
-            sendMessage(message, setSendMessageError, socket)
+            sendMessage(message, socket)
             setMessageInputValue('')
         }
     }
@@ -183,36 +169,32 @@ const Messages = ({
 
 
 
-
     return (
         <ChatContainer className=' ' >
 
-            <ConversationHeader >
-                <ConversationHeader.Back onClick={() => setSelectedChat(null)} />
+            <ConversationHeader>
+                <ConversationHeader.Back className='p-1' onClick={() => setSelectedChat(null)} />
                 {
-                    selectedChat?.isGroupChat ? (
-                        <AvatarGroup size="xs">
-                            {
-                                selectedChat?.users?.slice(0, 9)?.map((user) => (
-                                    <Avatar
-                                        src={user?.avatar || (user?.gender === 'male' ? '/defaultmaleavatar.png' : '/defaultfemaleavatar.png')}
-                                    />
-                                ))
-                            }
-                        </AvatarGroup>
-                    ) : (
+                    selectedChat?.isGroupChat ?
+                        (
+                            <Avatar
+                                src={selectedChat?.groupImage}
+                            />
 
-                        <Avatar
-                            status={recipient?.status}
-                            src={recipient?.avatar || (recipient?.gender === 'male' ? '/defaultmaleavatar.png' : (recipient?.gender === 'female' && '/defaultfemaleavatar.png'))}
-                            name={selectedChat?.users?.filter(u => u.email !== currentUser?.email)[0]?.name}
+                        ) :
+                        (
 
-                        />
-                    )
+                            <Avatar
+                                status={recipient?.status || recipientData?.status}
+                                src={recipient?.avatar || recipientData?.avatar || ((recipient?.gender === 'male' || recipientData?.gender === 'male') ? '/defaultmaleavatar.png' : ((recipient?.gender === 'female' || recipientData?.gender === 'female') && '/defaultfemaleavatar.png'))}
+                                name={selectedChat?.users?.filter(u => u.email !== currentUser?.email)[0]?.name || recipientData?.name}
+
+                            />
+                        )
                 }
 
-                <ConversationHeader.Content className='capitalize text-purple-400' userName={recipient?.name} info={selectedChat?.isGroupChat ? 'Group' : (recipient?.status === 'available' ? 'Active' : `Active ${moment(recipient?.updatedAt).fromNow()}`)} />
-                <ConversationHeader.Actions><div className='bg-purple-200 p-1 rounded-lg'><AiOutlineEdit onClick={() => showGroupUpdateModal()} className='text-purple-600 text-2xl cursor-pointer' /></div></ConversationHeader.Actions>
+                <ConversationHeader.Content className='capitalize text-purple-400' userName={selectedChat?.isGroupChat ? selectedChat?.chatName : !selectedChat?.isGroupChat && (recipient?.name || recipientData?.name)} info={selectedChat?.isGroupChat ? 'Group' : (recipient?.status === 'available' || recipientData?.status === 'available' ? 'Active' : `Active ${moment(recipient?.updatedAt).fromNow()}` || `Active ${moment(recipientData?.updatedAt).fromNow()}`)} />
+                <ConversationHeader.Actions><div className='bg-purple-200 p-1 rounded-lg'>{selectedChat?.isGroupChat ? <AiOutlineEdit onClick={() => showGroupUpdateModal()} className='text-purple-600 text-2xl cursor-pointer' /> : <AiFillEye onClick = { () => showGroupUpdateModal() } className = 'text-purple-600 text-2xl cursor-pointer'/>}</div></ConversationHeader.Actions>
             </ConversationHeader>
             <MessageList autoScrollToBottomOnMount={true} typingIndicator={isTyping ? <TypingIndicator className='capitalize' content={`${userTypingName} is typing`} /> : <></>}>
                 <MessageSeparator content="Saturday, 30 November 2019" />

@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { IoIosCloseCircleOutline } from 'react-icons/io'
 import { ExpansionPanel, Avatar, AvatarGroup } from '@chatscope/chat-ui-kit-react'
 import Skeleton from 'react-loading-skeleton'
-import { Modal } from 'antd'
+import { Modal, Upload, Button } from 'antd'
+import { useSWRConfig } from 'swr'
+import useAuth from '../../utils/useAuth'
 
 const UpdateGroupModal = ({
     isUpdateGroupModalVisible,
@@ -18,15 +20,64 @@ const UpdateGroupModal = ({
     groupSearchLoading,
     users,
     leaveGroup,
-    selectedChat
-
+    selectedChat,
+    updateGroupImage,
+    setUpdateGroupImage,
+    groupUpdateSuccess
 
 }) => {
+    const { user: currentUser } = useAuth();
+    const { mutate } = useSWRConfig()
+    const [preview, setPreview] = useState('')
+    useEffect(() => {
+        if (selectedChat?.groupImage) {
+            setPreview(selectedChat?.groupImage)
+            setUpdateGroupImage(selectedChat?.groupImage)
+        }
+    }, [selectedChat?.groupImage])
     const groupAdmin = selectedChat?.groupAdmin
+
+
+
+    const getBase64 = (file) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        console.log('file', file)
+        reader.onload = async () => {
+            setUpdateGroupImage(await reader.result)
+            setPreview(await reader.result)
+        };
+        reader.onerror = (error) => Promise.reject(error);
+
+    }
+
+    const handleChange = async ({ file }) => {
+        await getBase64(file?.originFileObj);
+
+    };
+    const recipient = selectedChat?.users?.filter(u => u?.email !== currentUser?.email)[0]
+
+    const uploadButton = (
+        <Button>Upload +</Button>
+
+    );
+
     return (
-        <Modal footer={[
-            <div className='flex  '><button className=' border-none bg-red-500 rounded-lg text-white hover:bg-red-700 hover:text-white p-2 duration-200' onClick={() => leaveGroup()}>Leave Group</button> <button className=' ml-2 border-none bg-purple-500 rounded-lg text-white hover:bg-purple-700 hover:text-white p-2 duration-200' onClick={() => updateGroupConfirm()}>Save Update</button></div>,
-        ]} wrapClassName='' maskStyle={{ backgroundColor: 'rgba(0,0,0,0.7)' }} cancelButtonProps={{ className: 'border-none bg-red-500 rounded-lg text-white hover:bg-red-700 hover:text-white ' }} okButtonProps={{ className: 'border-none bg-purple-500 rounded-lg text-white hover:bg-purple-700 hover:text-white ' }} closable okText='Update Group' title='Update Group Chat' onCancel={handleGroupUpdateCancel} onOk={updateGroupConfirm} visible={isUpdateGroupModalVisible} className='rounded-3xl'>
+        <Modal
+            footer={[
+                <div className='flex  '><button className={' border-none bg-red-500 rounded-lg text-white hover:bg-red-700 hover:text-white p-2 duration-200 ' + (selectedChat?.isGroupChat ? 'flex' : 'hidden')} onClick={() => leaveGroup()}>{selectedChat?.isGroupChat ? 'Leave Group' : 'Delete Conversation'} </button> <button className={' ml-2 border-none bg-purple-500 rounded-lg text-white hover:bg-purple-700 hover:text-white p-2 duration-200 ' + (selectedChat?.isGroupChat ? 'flex' : 'hidden')} onClick={() => updateGroupConfirm()}>Save Update</button></div>,
+            ]}
+            wrapClassName=''
+            maskStyle={{ backgroundColor: 'rgba(0,0,0,0.7)' }}
+            cancelButtonProps={{ className: 'border-none bg-red-500 rounded-lg text-white hover:bg-red-700 hover:text-white ' }}
+            okButtonProps={{ className: 'border-none bg-purple-500 rounded-lg text-white hover:bg-purple-700 hover:text-white ' }}
+            closable={true}
+            okText='Update Group' title={selectedChat?.isGroupChat ? 'Update Group Chat' : recipient?.name}
+            onCancel={handleGroupUpdateCancel}
+            onOk={updateGroupConfirm}
+            visible={isUpdateGroupModalVisible}
+            className='rounded-3xl'
+        >
             {
                 (groupSearch) && (
                     <ExpansionPanel title="Search Results" open={true} className='overflow-y-scroll rounded-2xl'>
@@ -53,27 +104,64 @@ const UpdateGroupModal = ({
 
             }
             <div>
-                <input
-                    type='text'
-                    placeholder='Group name'
-                    className='duration-200 outline-none appearance-none w-full p-2 border border-purple-300 rounded-lg focus:border-purple-500 focus:border-2'
-                    onChange={(e) => setUpdateGroupName(e.target.value)}
-                    value={updateGroupName}
+                <div>
+                    <Avatar
+                        size='lg'
+                        status={!selectedChat?.isGroupChat && recipient?.status}
+                        src={selectedChat?.groupChat ? preview : recipient?.avatar || (recipient?.gender === 'male' ? '/defaultmaleavatar.png' : (recipient?.gender === 'female' && '/defaultmaleavatar.png'))}
+                        className='rounded-full w-32 h-32 mx-auto mb-2'
+                    />
+                    {
+                        !selectedChat?.isGroupChat && (<div className='flex justify-center items-center font-thin'>{recipient?.email}</div>)
+                    }
+                </div>
+                {
+                    selectedChat?.groupChat && (
+                        <div className='mb-2 rounded-xl'>
+                            <Upload
+                                listType="text"
+                                multiple={false}
+                                onChange={handleChange}
+                                maxCount={1}
+                            >
+                                {uploadButton}
 
-                />
+                            </Upload>
+                        </div>
+                    )
+                }
             </div>
             <div>
-                <input
-                    type='text'
-                    placeholder='Add Users, eg: @user1 @user2'
-                    className=' duration-200 outline-none appearance-none w-full p-2 border mt-2 border-purple-300 rounded-lg focus:border-purple-500 focus:border-2'
-                    onChange={(e) => setGroupSearch(e.target.value)}
+                {
+                    selectedChat?.isGroupChat && (
+                        <>
 
-                />
+                            <div>
+                                <input
+                                    type='text'
+                                    placeholder='Group name'
+                                    className='duration-200 outline-none appearance-none w-full p-2 border border-purple-300 rounded-lg focus:border-purple-500 focus:border-2'
+                                    onChange={(e) => setUpdateGroupName(e.target.value)}
+                                    value={updateGroupName}
+
+                                />
+                            </div>
+                            <div>
+                                <input
+                                    type='text'
+                                    placeholder='Add Users, eg: @user1 @user2'
+                                    className=' duration-200 outline-none appearance-none w-full p-2 border mt-2 border-purple-300 rounded-lg focus:border-purple-500 focus:border-2'
+                                    onChange={(e) => setGroupSearch(e.target.value)}
+
+                                />
+                            </div>
+                        </>
+                    )
+                }
             </div>
             <div className='flex flex-wrap'>
                 {
-                    updateGroupUsers?.map(user => (
+                    selectedChat?.isGroupChat && updateGroupUsers?.map(user => (
                         <div className={' p-2 w-fit rounded-lg ml-2 my-2 duration-200 ' + (user?._id === groupAdmin?._id ? 'bg-red-500' : 'bg-purple-800 ')}>
                             <div key={user?._id} className='flex items-center text-white capitalize relative'>
                                 {
