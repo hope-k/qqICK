@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import {useRouter} from 'next/router'
 
+axios.defaults.withCredentials = true;
 export default function http() {
     const router = useRouter()
     
@@ -12,7 +13,6 @@ export default function http() {
             'Content-Type': 'application/json'
         },
     })
-
     API.interceptors.response.use(res => res, err => {
         if (err.response.status === 401) {
             router.push('/')
@@ -20,7 +20,6 @@ export default function http() {
         }
         return Promise.reject(err)
     })
-
 
     return {
         API

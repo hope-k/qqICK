@@ -108,7 +108,7 @@ const UpdateGroupModal = ({
                     <Avatar
                         size='lg'
                         status={!selectedChat?.isGroupChat && recipient?.status}
-                        src={selectedChat?.groupChat ? preview : recipient?.avatar || (recipient?.gender === 'male' ? '/defaultmaleavatar.png' : (recipient?.gender === 'female' && '/defaultmaleavatar.png'))}
+                        src={selectedChat?.isGroupChat ? (preview || '/groupavatar.jpg') : recipient?.avatar || (recipient?.gender === 'male' ? '/defaultmaleavatar.png' : (recipient?.gender === 'female' && '/defaultmaleavatar.png'))}
                         className='rounded-full w-32 h-32 mx-auto mb-2'
                     />
                     {

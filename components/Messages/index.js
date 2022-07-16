@@ -178,7 +178,7 @@ const Messages = ({
                     selectedChat?.isGroupChat ?
                         (
                             <Avatar
-                                src={selectedChat?.groupImage}
+                                src={selectedChat?.groupImage || '/groupavatar.jpg'}
                             />
 
                         ) :

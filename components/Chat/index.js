@@ -39,7 +39,7 @@ import Header from '../Header';
 import SearchList from '../SearchList';
 import Conversations from '../Conversations';
 import Messages from '../Messages';
-
+import Notification from '../../utils/notification';
 
 
 export default function Chat() {
@@ -201,7 +201,7 @@ export default function Chat() {
     useEffect(() => {
         if (leftGroupSuccess) {
             const message = selectedChat?.isGroupChat ? 'Group left successfully' : 'Conversation deleted successfully'
-            message?.success({ content: message, key: 'leave-group' })
+            Notification(message, 'success')
             setLeftGroupSuccess(false)
         }
     }, [leftGroupSuccess])
