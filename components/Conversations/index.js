@@ -86,7 +86,7 @@ const Conversations = ({
         <div>
             <ConversationList className='hover:bg-slate-200 duration-700 rounded-3xl '>
                 {
-                    (!onlyGroupChats.length || !onlyUserChats.length) && (
+                    (!onlyGroupChats?.length || !onlyUserChats?.length) && (
                         <div className='w-full h-screen md:hidden  flex items-center justify-center '>
                             <ChatContainer className='overflow-hidden  h-screen w-full bg-red-500'>
                                 <MessageList>
