@@ -194,7 +194,7 @@ export default function Chat() {
 
     const updateGroupConfirm = () => {
         message.loading({ content: 'Updating group...', key: 'group-update' })
-        API.put(`/api/group-chat/update?groupId=${selectedChat?._id}`, { groupName: updateGroupName, users: updateGroupUsers, groupImage: updateGroupImage }).then(res => { setGroupUpdateSuccess(true); setIsUpdateGroupModalVisible(false); setSelectedChat(null); setSelectedChat(res.data.chat) }).catch(err => { console.log(err?.response?.data?.error); setGroupUpdateError(err.response?.data?.error) })
+        API.put(`/api/group-chat/update?groupId=${selectedChat?._id}`, { groupName: updateGroupName, users: updateGroupUsers, groupImage: updateGroupImage }).then(res => { setGroupUpdateSuccess(true); setIsUpdateGroupModalVisible(false); setSelectedChat(null); setSelectedChat(res?.data?.chat) }).catch(err => { console.log(err?.response?.data?.error); setGroupUpdateError(err.response?.data?.error) })
     }
 
     const [leftGroupSuccess, setLeftGroupSuccess] = useState(false);

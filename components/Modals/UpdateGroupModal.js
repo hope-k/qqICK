@@ -65,7 +65,12 @@ const UpdateGroupModal = ({
     return (
         <Modal
             footer={[
-                <div className='flex  '><button className={' border-none bg-red-500 rounded-lg text-white hover:bg-red-700 hover:text-white p-2 duration-200 ' + (selectedChat?.isGroupChat ? 'flex' : 'hidden')} onClick={() => leaveGroup()}>{selectedChat?.isGroupChat ? 'Leave Group' : 'Delete Conversation'} </button> <button className={' ml-2 border-none bg-purple-500 rounded-lg text-white hover:bg-purple-700 hover:text-white p-2 duration-200 ' + (selectedChat?.isGroupChat ? 'flex' : 'hidden')} onClick={() => updateGroupConfirm()}>Save Update</button></div>,
+                <div className='flex  '>
+                    <button className={' border-none bg-red-500 rounded-lg text-white hover:bg-red-700 hover:text-white p-2 duration-200 ' + (selectedChat?.isGroupChat ? 'flex' : 'hidden')} onClick={leaveGroup}>
+                        {selectedChat?.isGroupChat ? 'Leave Group' : 'Delete Conversation'}
+                    </button>
+                    <button className={' ml-2 border-none bg-purple-500 rounded-lg text-white hover:bg-purple-700 hover:text-white p-2 duration-200 ' + (selectedChat?.isGroupChat ? 'flex' : 'hidden')} onClick={() => updateGroupConfirm()}>Save Update</button>
+                </div>,
             ]}
             wrapClassName=''
             maskStyle={{ backgroundColor: 'rgba(0,0,0,0.7)' }}
@@ -116,7 +121,7 @@ const UpdateGroupModal = ({
                     }
                 </div>
                 {
-                    selectedChat?.groupChat && (
+                    selectedChat?.isGroupChat && (
                         <div className='mb-2 rounded-xl'>
                             <Upload
                                 listType="text"
