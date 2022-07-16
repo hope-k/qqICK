@@ -62,6 +62,7 @@ const useAuth = () => {
 
     const logout = async () => {
         await API.post('/api/logout')
+        Cookie.remove('token')
         router.reload()
         mutate(null)
 
