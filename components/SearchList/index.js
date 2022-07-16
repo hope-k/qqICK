@@ -20,7 +20,7 @@ const SearchList = ({ search, searchLoading, users, setChatLoading, setSelectedC
                                         const receiverId = user?._id
                                         return (
                                             <div onClick={() => accessChat(receiverId, setSelectedChat)} id='chatPop' key={user?._id} className={'cursor-pointer hover:bg-purple-700 hover:text-white flex bg-[#605f5f1a] m-2 rounded-lg p-1 duration-500 opacity-100'}>
-                                                <Avatar src={user?.avatar || '/defaultmaleavatar.png'} />
+                                                <Avatar src={user?.avatar || (user?.gender === 'male' ? '/defaultmaleavatar.png' : (user?.gender === 'female' && '/defaultfemaleavatar.png'))} />
                                                 <span className='ml-3 capitalize text-sm font-mono'>{user?.name}</span>
                                                 <span className='items-end flex  text-xs font-mono '>Email: {user?.email}</span>
                                             </div>
