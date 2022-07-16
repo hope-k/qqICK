@@ -15,7 +15,7 @@ const SearchList = ({ search, searchLoading, users, setChatLoading, setSelectedC
 
                             searchLoading ? <Skeleton count={10} height={50} /> : (
 
-                                !users.length ? <div className='text-center text-gray-500 bg-slate-200 p-10 rounded-lg'>No results found</div> : (
+                                !users?.length ? <div className='text-center text-gray-500 bg-slate-200 p-10 rounded-lg'>No results found</div> : (
                                     users?.map(user => {
                                         const receiverId = user?._id
                                         return (
