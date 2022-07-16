@@ -1,7 +1,7 @@
 import { useNotifications } from '../context/notifications'
 import { useSWRConfig } from 'swr'
 import http from '../config/axios'
-import useAuth from '../utils/useAuth'
+import useAuth from './useAuth'
 import React, { useEffect, useState } from 'react'
 import { useSocket } from '../context/socket'
 

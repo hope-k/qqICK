@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { RiArrowDownSLine } from 'react-icons/ri'
 import { BsBell } from 'react-icons/bs'
 import { Avatar } from '@chatscope/chat-ui-kit-react'
-import useAuth from '../../utils/useAuth'
+import useAuth from '../../hooks/useAuth'
 import ProfileModal from '../Modals/ProfileModal'
 import { useNotifications } from '../../context/notifications'
 import { Dropdown, Menu, Space, Badge } from 'antd';

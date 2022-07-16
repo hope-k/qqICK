@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import gsap from "gsap";
-import useAuth from '../../utils/useAuth';
-import Notification from '../../utils/notification';
+import useAuth from '../../hooks/useAuth';
+import Notification from '../../hooks/notification';
 
 const Login = () => {
     const { login } = useAuth();

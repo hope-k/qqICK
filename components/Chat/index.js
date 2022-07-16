@@ -27,8 +27,8 @@ import gsap from 'gsap'
 import { BsBell } from 'react-icons/bs'
 import { RiArrowDownSLine } from 'react-icons/ri'
 import Skeleton from 'react-loading-skeleton'
-import useChat from '../../utils/useChat'
-import useAuth from '../../utils/useAuth'
+import useChat from '../../hooks/useChat'
+import useAuth from '../../hooks/useAuth'
 import { MdGroupAdd } from 'react-icons/md'
 import { IoIosCloseCircleOutline } from 'react-icons/io'
 import { message } from 'antd'
@@ -39,7 +39,7 @@ import Header from '../Header';
 import SearchList from '../SearchList';
 import Conversations from '../Conversations';
 import Messages from '../Messages';
-import Notification from '../../utils/notification';
+import Notification from '../../hooks/notification';
 
 
 export default function Chat() {

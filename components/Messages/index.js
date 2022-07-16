@@ -15,10 +15,10 @@ import {
 
 } from '@chatscope/chat-ui-kit-react'
 import { AiOutlineEdit, AiFillEye } from 'react-icons/ai'
-import useAuth from '../../utils/useAuth'
-import useMessage from '../../utils/useMessage'
+import useAuth from '../../hooks/useAuth'
+import useMessage from '../../hooks/useMessage'
 import { message, notification } from 'antd'
-import chatLogic from '../../utils/chatLogic'
+import chatLogic from '../../hooks/chatLogic'
 import { useSWRConfig } from 'swr'
 import { useSocket } from '../../context/socket'
 import moment from 'moment'

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal } from 'antd'
-import useAuth from '../../utils/useAuth'
+import useAuth from '../../hooks/useAuth'
 import { Avatar, Status, StatusList } from '@chatscope/chat-ui-kit-react'
 import { BiLogOutCircle } from 'react-icons/bi'
 

@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Modal, Upload, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import gsap from 'gsap'
-import useAuth from '../../utils/useAuth';
-import Notification from '../../utils/notification';
+import useAuth from '../../hooks/useAuth';
+import Notification from '../../hooks/notification';
 import { useRouter } from 'next/router';
+
+
 
 const Register = ({ setSwitchForm }) => {
     const { register } = useAuth();
@@ -25,9 +27,8 @@ const Register = ({ setSwitchForm }) => {
         e.preventDefault();
         const credentials = { email, name, password, avatar, confirmPassword, gender }
         register(credentials, setError, setSuccess, setLoading)
-
-
     }
+    
     useEffect(() => {
         if (success) {
             //to switch to login form
@@ -170,8 +171,8 @@ const Register = ({ setSwitchForm }) => {
                 </div>
                 <div className='flex flex-col  '>
                     {
-                        ['male', 'female'].map(g => (
-                            <div className='items-center flex my-1' >
+                        ['male', 'female'].map((g, i) => (
+                            <div id={i}  className='items-center flex my-1' >
                                 <input
                                     type='radio'
                                     name={g}

@@ -1,5 +1,5 @@
 import React from 'react'
-import useChat from '../../utils/useChat'
+import useChat from '../../hooks/useChat'
 import { ExpansionPanel, Avatar } from '@chatscope/chat-ui-kit-react'
 import Skeleton from 'react-loading-skeleton'
 

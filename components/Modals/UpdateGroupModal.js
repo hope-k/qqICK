@@ -4,7 +4,7 @@ import { ExpansionPanel, Avatar, AvatarGroup } from '@chatscope/chat-ui-kit-reac
 import Skeleton from 'react-loading-skeleton'
 import { Modal, Upload, Button } from 'antd'
 import { useSWRConfig } from 'swr'
-import useAuth from '../../utils/useAuth'
+import useAuth from '../../hooks/useAuth'
 
 const UpdateGroupModal = ({
     isUpdateGroupModalVisible,

@@ -2,8 +2,8 @@ import { message } from 'antd'
 import useSWR, { useSWRConfig } from 'swr'
 import http from '../config/axios'
 import { useEffect, useState } from 'react'
-import Notification from '../utils/notification'
-import useAuth from '../utils/useAuth'
+import Notification from '../hooks/notification'
+import useAuth from '../hooks/useAuth'
 
 
 export default function useMessage(chatId, setLoadingMessages, socket, selectedChat, setUpdatedMessages, isNotification) {

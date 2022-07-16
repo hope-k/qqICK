@@ -2,7 +2,7 @@ import React, { useState, useContext, createContext, useEffect } from 'react'
 import useSWR from 'swr'
 import http from '../config/axios'
 const NotificationsContext = createContext()
-import useAuth from '../utils/useAuth'
+import useAuth from '../hooks/useAuth'
 
 export default function NotificationsProvider({ children }) {
     const { user: currentUser } = useAuth()

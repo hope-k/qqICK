@@ -8,12 +8,12 @@ import {
     MessageList
 
 } from '@chatscope/chat-ui-kit-react'
-import useAuth from '../../utils/useAuth'
+import useAuth from '../../hooks/useAuth'
 import moment from 'moment'
 import { useSWRConfig } from 'swr'
 import { useNotifications } from '../../context/notifications'
 import { useSocket } from '../../context/socket'
-import chatLogic from '../../utils/chatLogic'
+import chatLogic from '../../hooks/chatLogic'
 import { RiInvisionLine } from 'react-icons/ri'
 
 
@@ -86,7 +86,7 @@ const Conversations = ({
         <div>
             <ConversationList className='hover:bg-slate-200 duration-700 rounded-3xl '>
                 {
-                    (!onlyGroupChats?.length || !onlyUserChats?.length) && (
+                    (!onlyGroupChats?.length && !onlyUserChats?.length) && (
                         <div className='w-full h-screen md:hidden  flex items-center justify-center '>
                             <ChatContainer className='overflow-hidden  h-screen w-full bg-red-500'>
                                 <MessageList>
