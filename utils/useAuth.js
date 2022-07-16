@@ -2,7 +2,7 @@ import useSwr from 'swr'
 import http from '../config/axios'
 import { message } from 'antd'
 import { useRouter } from 'next/router'
-
+import Cookie from 'js-cookie'
 
 const useAuth = () => {
     const router = useRouter();
@@ -17,6 +17,7 @@ const useAuth = () => {
             .then(res => {
                 run()
                 if (res.data) {
+                    Cookie.set('token', res.data.token)
                     message.success({ content: 'Login successful', key: 'login', duration: 2 })
                     mutate('/api/me')
                     router.push('/chat')
