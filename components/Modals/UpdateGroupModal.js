@@ -177,7 +177,7 @@ const UpdateGroupModal = ({
                                         </div>
                                     )
                                 }
-                                <Avatar className='mr-1 capitalize' src={user?.avatar || '/defaultmaleavatar.png'} />
+                                <Avatar className='mr-1 capitalize' src={user?.avatar || (user?.gender === 'male' ? '/defaultmaleavatar.png' : (user?.gender === 'female' && '/defaultfemaleavatar.png'))} />
                                 {user?.name} {(user?._id !== groupAdmin?._id) && <IoIosCloseCircleOutline onClick={() => removeUserFromUpdateGroup(user)} className='cursor-pointer text-[1.2rem] ml-1' />}
                             </div>
                         </div>

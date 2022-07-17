@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { Modal } from 'antd';
 import { useSWRConfig } from 'swr'
-import {useRouter} from 'next/router'
+import { useRouter } from 'next/router'
 import {
     MainContainer,
     Search,
@@ -152,10 +152,11 @@ export default function Chat() {
     }, [selectedChat])
 
     const removeUserFromUpdateGroup = (user) => {
-        if (user?._id === currentUser?._id) {
-            setUpdateGroupUsers(updateGroupUsers.filter(u => u !== user))
+        console.log(user, '---')
+        if (currentUser?._id === selectedChat?.groupAdmin?._id) {
+            setUpdateGroupUsers(updateGroupUsers.filter(u => u?._id !== user?._id))
         } else {
-            message.error({ content: 'You can not remove other users from group', key: 'remove-user-from-group' })
+            message.error({ content: 'You are not the admin of this group', key: 'remove-user-from-group' })
         }
     }
     const addUserToUpdateGroup = (user) => {
@@ -177,6 +178,7 @@ export default function Chat() {
     useEffect(() => {
         if (groupUpdateSuccess) {
             message.success({ content: 'Group updated successfully', key: 'group-update' })
+
             setIsUpdateGroupModalVisible(false);
             mutate('/api/chat/index');
             mutate('')
@@ -194,7 +196,7 @@ export default function Chat() {
 
     const updateGroupConfirm = () => {
         message.loading({ content: 'Updating group...', key: 'group-update' })
-        API.put(`/api/group-chat/update?groupId=${selectedChat?._id}`, { groupName: updateGroupName, users: updateGroupUsers, groupImage: updateGroupImage }).then(res => { setGroupUpdateSuccess(true); setIsUpdateGroupModalVisible(false); setSelectedChat(null); setSelectedChat(res?.data?.chat) }).catch(err => { console.log(err?.response?.data?.error); setGroupUpdateError(err.response?.data?.error) })
+        API.put(`/api/group-chat/update?groupId=${selectedChat?._id}`, { groupName: updateGroupName, users: updateGroupUsers, groupImage: updateGroupImage }).then(res => { setGroupUpdateSuccess(true); setIsUpdateGroupModalVisible(false); setSelectedChat(null); router.reload(); setSelectedChat(res?.data?.chat) }).catch(err => { console.log(err?.response?.data?.error); setGroupUpdateError(err.response?.data?.error) })
     }
 
     const [leftGroupSuccess, setLeftGroupSuccess] = useState(false);
@@ -204,16 +206,21 @@ export default function Chat() {
             Notification(message, 'success')
             setLeftGroupSuccess(false)
         }
-    }, [leftGroupSuccess])
+    }, [leftGroupSuccess, selectedChat])
 
     const leaveGroup = () => {
         message.loading({ content: 'Leaving group...', key: 'leave-group' })
         if (selectedChat?.groupAdmin?._id === currentUser?._id) {
+            console.log('deleting group')
             //delete group
             API.delete(`/api/group-chat/delete?groupId=${selectedChat?._id}`).then(res => { setSelectedChat(null); setLeftGroupSuccess(true); setIsUpdateGroupModalVisible(false); mutate('/api/chat/index') }).catch(err => { setGroupUpdateError(err.response?.data?.error) })
         } else {
+            // ID of the user who left the group
+            const userId = selectedChat?.users?.filter(u => u?._id === currentUser?._id)[0]?._id
             //remove current user from group
-            API.put(`/api/group-chat/update?groupId=${selectedChat?._id}`, { users: updateGroupUsers.filter(u => u._id !== currentUser?._id) }).then(res => { setSelectedChat(null); setLeftGroupSuccess(true); setIsUpdateGroupModalVisible(false); mutate('/api/chat/index') }).catch(err => { setGroupUpdateError(err.response?.data?.error) })
+
+            console.log('removing user', userId)
+            API.put(`/api/group-chat/remove-user?groupId=${selectedChat?._id}&userId=${userId}`, {}).then(res => { setSelectedChat(null); setLeftGroupSuccess(true); setIsUpdateGroupModalVisible(false); mutate('/api/chat/index') }).catch(err => { setGroupUpdateError(err.response?.data?.error) })
         }
     }
 
@@ -279,6 +286,8 @@ export default function Chat() {
                                     groupUpdateSuccess={groupUpdateSuccess}
 
                                 />
+
+
                             </div>
                             <SearchList
                                 search={search}

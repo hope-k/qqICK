@@ -86,7 +86,7 @@ const CreateGroupModal = ({
                 {
                     usersToAdd?.map(user => (
                         <div className=' bg-purple-500 p-2 w-fit rounded-lg ml-2 my-2 duration-500'>
-                            <div key={user?._id} className='flex duration-500 items-center text-white'><Avatar className='mr-1' src={user?.avatar || '/defaultmaleavatar.png'} /> <span className='capitalize'>{user?.name}</span> <IoIosCloseCircleOutline onClick={() => removeUser(user)} className='cursor-pointer text-[1.2rem] ml-1' /></div>
+                            <div key={user?._id} className='flex duration-500 items-center text-white'><Avatar className='mr-1' src={user?.avatar || (user?.gender === 'male' ? '/defaultmaleavatar.png' : (user?.gender === 'female' && '/defaultfemaleavatar.png'))} /> <span className='capitalize'>{user?.name}</span> <IoIosCloseCircleOutline onClick={() => removeUser(user)} className='cursor-pointer text-[1.2rem] ml-1'/></div>
                         </div>
                     ))
                 }
