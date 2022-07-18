@@ -229,8 +229,8 @@ export default function Chat() {
 
     return (
         <>
-            <Header setSelectedChat={setSelectedChat} isNotification={isNotification} setIsNotification={setIsNotification} />
-            <div className='relative w-full h-[90vh] '>
+            <Header selectedChat={selectedChat} setSelectedChat={setSelectedChat} isNotification={isNotification} setIsNotification={setIsNotification} />
+            <div className='relative w-full h-screen '>
                 <MainContainer>
                     <div style={{ scrollbarWidth: '1px' }} className={'h-full w-full md:w-[25vw] px-2 md:flex ' + (selectedChat ? 'hidden' : 'flex')}>
                         <Sidebar className='h-full w-full md:w-[25vw]' position="left" loading={chatLoading}>

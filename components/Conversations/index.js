@@ -83,7 +83,7 @@ const Conversations = ({
 
 
     return (
-        <div>
+        <div className=''>
             <ConversationList className='hover:bg-slate-200 duration-700 rounded-3xl '>
                 {
                     (!onlyGroupChats?.length && !onlyUserChats?.length) && (

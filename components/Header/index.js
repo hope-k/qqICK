@@ -9,7 +9,7 @@ import { Dropdown, Menu, Space, Badge } from 'antd';
 import moment from 'moment'
 
 
-const Header = ({ setSelectedChat, setIsNotification }) => {
+const Header = ({ setSelectedChat, setIsNotification, selectedChat }) => {
     const { user: currentUser } = useAuth()
     const [isProfileVisible, setProfileVisible] = useState(false)
     const { notifications } = useNotifications();
@@ -52,19 +52,18 @@ const Header = ({ setSelectedChat, setIsNotification }) => {
     );
     return (
         <>
-            <div className='border-b-2 shadow-2xl bg-white-100 w-full flex px-6 md:px-10 items-center h-[10vh]'>
+            <div className={'border-b-2 shadow-2xl bg-white w-full flex px-6 md:px-10 items-center h-[7.5vh] relative z-50 ' + (!selectedChat && ' sticky top-0 ')}>
                 <div className='w-[8rem] md:w-20 md:h-full'>
                     <img src='/qheader.png' className='object-contain' />
                 </div>
                 <div className='justify-end w-full flex items-center '>
-                    <div className='cursor-pointer'>
+                    <div className='cursor-pointer relative left-4'>
                         <Dropdown arrow={true} overlayClassName='cursor-pointer' overlay={menu} trigger={['click']}>
                             <Badge count={notifications?.length} overflowCount={5}>
                                 <BsBell className='h-full text-[1.3rem] cursor-pointer' />
                             </Badge>
                         </Dropdown>
                     </div>
-
                 </div>
                 <div onClick={() => setProfileVisible(true)} className=' ml-8 m-1 p-2 h-12 bg-slate-200 rounded-lg flex items-center cursor-pointer'>
                     <Avatar src={currentUser?.avatar || (currentUser?.gender === 'male' ? '/defaultmaleavatar.png' : (currentUser?.gender === 'female' && '/defaultfemaleavatar.png'))} style={{ width: '3px', height: '3px' }} />

@@ -134,6 +134,12 @@ const Messages = ({
         }
     }
 
+    const sendMessageIconHandler = () => {
+        setIsTyping(false)
+        sendMessage(message, socket)
+        setMessageInputValue('')
+    }
+
 
     const typingHandler = (val) => {
         //typing state for every single key stroke
@@ -175,7 +181,7 @@ const Messages = ({
 
 
     return (
-        <div className='h-screen w-full'>
+        <div className='h-full w-full'>
             <ChatContainer>
                 <ConversationHeader>
                     <ConversationHeader.Back className='p-1' onClick={() => setSelectedChat(null)} />
@@ -252,7 +258,7 @@ const Messages = ({
                             )
                     }
                 </MessageList>
-                <MessageInput placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
+                <MessageInput onSend={sendMessageIconHandler} placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
             </ChatContainer>
         </div>
     )
