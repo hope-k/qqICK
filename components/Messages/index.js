@@ -108,7 +108,7 @@ const Messages = ({
         text: messageInputValue
     }
 
-   
+
 
 
 
@@ -157,6 +157,11 @@ const Messages = ({
         }, timerLength)
     }
     const recipient = selectedChat?.users?.filter(u => u?.email !== currentUser?.email)[0]
+    const latestMessage = selectedChat?.latestMessage
+    // check if latest message date is less than 24 hours ago
+    const isRecent = moment(latestMessage?.createdAt).isAfter(moment().subtract(24, 'hours'))
+
+
 
 
 
@@ -170,73 +175,86 @@ const Messages = ({
 
 
     return (
-        <ChatContainer className=' ' >
+        <div className='h-full w-full'>
+            <ChatContainer>
+                <ConversationHeader>
+                    <ConversationHeader.Back className='p-1' onClick={() => setSelectedChat(null)} />
+                    {
+                        selectedChat?.isGroupChat ?
+                            (
+                                <Avatar
+                                    src={selectedChat?.groupImage || '/groupavatar.jpg'}
+                                />
 
-            <ConversationHeader>
-                <ConversationHeader.Back className='p-1' onClick={() => setSelectedChat(null)} />
-                {
-                    selectedChat?.isGroupChat ?
-                        (
-                            <Avatar
-                                src={selectedChat?.groupImage || '/groupavatar.jpg'}
-                            />
+                            ) :
+                            (
 
+                                <Avatar
+                                    status={recipient?.status || recipientData?.status}
+                                    src={recipient?.avatar || recipientData?.avatar || ((recipient?.gender === 'male' || recipientData?.gender === 'male') ? '/defaultmaleavatar.png' : ((recipient?.gender === 'female' || recipientData?.gender === 'female') && '/defaultfemaleavatar.png'))}
+                                    name={selectedChat?.users?.filter(u => u.email !== currentUser?.email)[0]?.name || recipientData?.name}
+
+                                />
+                            )
+                    }
+
+                    <ConversationHeader.Content className='capitalize text-purple-400' userName={selectedChat?.isGroupChat ? selectedChat?.chatName : !selectedChat?.isGroupChat && (recipient?.name || recipientData?.name)} info={selectedChat?.isGroupChat ? 'Group' : (recipient?.status === 'available' || recipientData?.status === 'available' ? 'Active' : `Active ${moment(recipient?.updatedAt).fromNow()}` || `Active ${moment(recipientData?.updatedAt).fromNow()}`)} />
+                    <ConversationHeader.Actions><div className='bg-purple-200 p-1 rounded-lg'>{selectedChat?.isGroupChat ? <AiOutlineEdit onClick={() => showGroupUpdateModal()} className='text-purple-600 text-2xl cursor-pointer' /> : <AiFillEye onClick={() => showGroupUpdateModal()} className='text-purple-600 text-2xl cursor-pointer' />}</div></ConversationHeader.Actions>
+                </ConversationHeader>
+
+
+
+                <MessageList autoScrollToBottomOnMount={true} typingIndicator={isTyping ? <TypingIndicator className='capitalize' content={`${userTypingName} is typing`} /> : <></>}>
+
+
+
+                    {
+
+                        loadingMessages || !messages ? (
+                            <div className='flex justify-center items-center h-full'>
+                                <Loader />
+                            </div>
                         ) :
-                        (
+                            (
+                                updatedMessages?.map((message, index) => {
+                                    
+                                    return (
+                                        <div>
+                                            {
+                                                (latestMessage?._id === message?._id) && (!isRecent && <MessageSeparator content={moment(latestMessage?.createdAt).format('LLL')} />)
 
-                            <Avatar
-                                status={recipient?.status || recipientData?.status}
-                                src={recipient?.avatar || recipientData?.avatar || ((recipient?.gender === 'male' || recipientData?.gender === 'male') ? '/defaultmaleavatar.png' : ((recipient?.gender === 'female' || recipientData?.gender === 'female') && '/defaultfemaleavatar.png'))}
-                                name={selectedChat?.users?.filter(u => u.email !== currentUser?.email)[0]?.name || recipientData?.name}
-
-                            />
-                        )
-                }
-
-                <ConversationHeader.Content className='capitalize text-purple-400' userName={selectedChat?.isGroupChat ? selectedChat?.chatName : !selectedChat?.isGroupChat && (recipient?.name || recipientData?.name)} info={selectedChat?.isGroupChat ? 'Group' : (recipient?.status === 'available' || recipientData?.status === 'available' ? 'Active' : `Active ${moment(recipient?.updatedAt).fromNow()}` || `Active ${moment(recipientData?.updatedAt).fromNow()}`)} />
-                <ConversationHeader.Actions><div className='bg-purple-200 p-1 rounded-lg'>{selectedChat?.isGroupChat ? <AiOutlineEdit onClick={() => showGroupUpdateModal()} className='text-purple-600 text-2xl cursor-pointer' /> : <AiFillEye onClick = { () => showGroupUpdateModal() } className = 'text-purple-600 text-2xl cursor-pointer'/>}</div></ConversationHeader.Actions>
-            </ConversationHeader>
-            <MessageList autoScrollToBottomOnMount={true} typingIndicator={isTyping ? <TypingIndicator className='capitalize' content={`${userTypingName} is typing`} /> : <></>}>
-                <MessageSeparator content="Saturday, 30 November 2019" />
-                {
-                    loadingMessages || !messages ? (
-                        <div className='flex justify-center items-center h-full'>
-                            <Loader />
-                        </div>
-                    ) :
-                        (
-                            updatedMessages?.map((message, index) => (
-                                <div>
-                                    <Message className='mb-10' model={{
-                                        message: message?.text,
-                                        sentTime: "just now",
-                                        sender: message?.sender?.name,
-                                        direction: message?.sender?._id === currentUser?._id ? 'outgoing' : 'incoming',
-                                        position: 'single',
+                                            }
+                                            <Message className='mb-10' model={{
+                                                message: message?.text,
+                                                sentTime: "just now",
+                                                sender: message?.sender?.name,
+                                                direction: message?.sender?._id === currentUser?._id ? 'outgoing' : 'incoming',
+                                                position: 'single',
 
 
-                                    }} avatarPosition="cl">
-                                        {
-                                            message?.sender?._id !== currentUser?._id && (
-                                                <Avatar
+                                            }} avatarPosition="cl">
+                                                {
+                                                    message?.sender?._id !== currentUser?._id && (
+                                                        <Avatar
 
-                                                    src={message?.sender?.avatar || (message?.sender?.gender === 'male' ? '/defaultmaleavatar.png' : '/defaultfemaleavatar.png')} name={message?.sender?.name} />
+                                                            src={message?.sender?.avatar || (message?.sender?.gender === 'male' ? '/defaultmaleavatar.png' : '/defaultfemaleavatar.png')} name={message?.sender?.name} />
 
-                                            )
-                                        }
-                                        <Message.Footer sender={message?.sender?.name} sentTime={moment(message?.createdAt).fromNow()} />
+                                                    )
+                                                }
+                                                <Message.Footer sender={message?.sender?.name} sentTime={moment(message?.createdAt).fromNow()} />
 
-                                    </Message>
+                                            </Message>
 
-                                </div>
+                                        </div>
+                                    )
+                                })
+
                             )
-                            )
-
-                        )
-                }
-            </MessageList>
-            <MessageInput placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
-        </ChatContainer>
+                    }
+                </MessageList>
+                <MessageInput placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
+            </ChatContainer>
+        </div>
     )
 }
 

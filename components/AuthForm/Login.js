@@ -56,7 +56,7 @@ const Login = () => {
                         id="exampleFormControlInput1"
                         placeholder="Email"
                         onChange={(e) => setEmail(e.target.value)}
-                        value={guestEmail ? guestEmail : email}
+                        value={email}
                     />
                 </div>
                 <div className="mb-4 relative">
@@ -66,7 +66,7 @@ const Login = () => {
                         id="exampleFormControlInput1"
                         placeholder="Password"
                         onChange={(e) => setPassword(e.target.value)}
-                        value={guestPassword ? guestPassword : password}
+                        value={password}
                     />
                     <h1 onClick={() => toggleShow()} className={'absolute bottom-2 right-2 cursor-pointer ' + (show && 'text-red-500 font-semibold')}>show</h1>
                 </div>
@@ -87,8 +87,8 @@ const Login = () => {
                 <div className="flex flex-col md:flex-row items-center justify-between pb-6">
                     <button
                         onClick={() => {
-                            setGuestEmail('guestone@welcome.com')
-                            setGuestPassword('Safepassforguest123@')
+                            setEmail('guestone@welcome.com')
+                            setPassword('Safepassforguest123@')
                         }}
                         type="button"
                         className="inline-block px-6 py-2 border-2 border-red-600 text-red-600 font-medium text-xs leading-tight uppercase rounded-xl hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
@@ -100,11 +100,11 @@ const Login = () => {
                  <div className="flex flex-col md:flex-row items-center justify-between pb-6">
                     <button
                         onClick={() => {
-                            setGuestEmail('guesttwo@welcome.com')
-                            setGuestPassword('Safepassforguest123@')
+                            setEmail('guesttwo@welcome.com')
+                            setPassword('Safepassforguest123@')
                         }}
                         type="button"
-                        className="inline-block px-6 py-2 border-2 border-red-600 text-red-600 font-medium text-xs leading-tight uppercase rounded-xl hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+                        className="inline-block px-6 py-2 border-2 mb-2 border-purple-500 text-fuchsia-500 font-medium text-xs leading-tight uppercase rounded-xl hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
 
                     >
                         Log in with guest two credentials

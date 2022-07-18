@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
 
 axios.defaults.withCredentials = true;
 export default function http() {
@@ -26,6 +27,8 @@ export default function http() {
 
     API.interceptors.response.use(res => res, err => {
         if (err.response.status === 401) {
+            Cookies.remove('token')
+            localStorage.removeItem('token')
             router.push('/')
             return axios(err.config)
         }
