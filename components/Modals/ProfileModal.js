@@ -12,7 +12,7 @@ const ProfileModal = ({ setProfileVisible, isProfileVisible }) => {
             <div className='flex justify-center items-center flex-col'>
                 <Avatar
                     status={currentUser?.status}
-                    src={currentUser?.avatar || '/defaultmaleavatar.png'}
+                    src={currentUser?.avatar || (currentUser?.gender === 'male' ? '/defaultmaleavatar.png' : (currentUser?.gender === 'female' && '/defaultfemaleavatar.png'))}
                     size='lg'
                 />
                 <div className='font-semibold capitalize'>
