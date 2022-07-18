@@ -100,7 +100,7 @@ const Conversations = ({
                 }
                 {
                     onlyGroupChats?.map(chat => (
-                        <Conversation unreadCnt={unreadMessagesForChat(chat)} className={' m-2 duration-150  rounded-xl flex justify-center items-center ' + ((selectedChat === chat) && 'bg-slate-200 ')} onClick={() => { setSelectedChat(chat); mutate('/api/message/chatId') }} name={chat?.chatName} lastSenderName={chat?.latestMessage?.sender?.name} info={chat?.latestMessage?.text} lastActivityTime={<span className='text-xs font-thin'>{moment(chat?.latestMessage?.createdAt).fromNow()}</span>}>
+                        <Conversation unreadCnt={unreadMessagesForChat(chat)} className={'mx-[-10px] my-2 duration-150  rounded-xl flex justify-center items-center ' + ((selectedChat === chat) && 'bg-slate-200 ')} onClick={() => { setSelectedChat(chat); mutate('/api/message/chatId') }} name={chat?.chatName} lastSenderName={chat?.latestMessage?.sender?.name} info={chat?.latestMessage?.text} lastActivityTime={<span className='text-xs font-thin'>{moment(chat?.latestMessage?.createdAt).fromNow()}</span>}>
                             <Avatar src={chat?.groupImage || '/groupavatar.jpg'} className='flex justify-center items-center' />
                         </Conversation>
 
@@ -111,7 +111,7 @@ const Conversations = ({
                     onlyUserChats?.map(chat => {
                         const recipient = chat?.users?.filter(u => u?.email !== currentUser?.email)[0]
                         return (
-                            <Conversation unreadCnt={unreadMessagesForChat(chat)} className={' m-2 duration-150  rounded-xl flex justify-center items-center ' + ((selectedChat === chat) && 'bg-slate-200 ')} onClick={() => setSelectedChat(chat)} name={recipient?.name} lastSenderName={chat?.latestMessage?.sender?.name} info={chat?.latestMessage?.text} lastActivityTime={<span className='text-xs font-thin'>{moment(chat?.latestMessage?.createdAt).fromNow()}</span>}>
+                            <Conversation unreadCnt={unreadMessagesForChat(chat)} className={'mx-[-10px] my-2 duration-150  rounded-xl flex justify-center items-center ' + ((selectedChat === chat) && 'bg-slate-200 ')} onClick={() => setSelectedChat(chat)} name={recipient?.name} lastSenderName={chat?.latestMessage?.sender?.name} info={chat?.latestMessage?.text} lastActivityTime={<span className='text-xs font-thin'>{moment(chat?.latestMessage?.createdAt).fromNow()}</span>}>
                                 <Avatar
                                     className='duration-200'
                                     status={recipient?.status}
