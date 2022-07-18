@@ -23,7 +23,12 @@ const useAuth = () => {
             .then(res => {
                 run()
                 if (res.data) {
-                    Cookie.set('token', res.data.token)
+                    Cookie.set('token', res.data.token, {
+                        expires: 1,
+                        secure: process.env.NODE_ENV === 'production' ? true : false,
+                        sameSite: 'none'
+
+                    })
                     message.success({ content: 'Login successful', key: 'login', duration: 2 })
                     mutate('/api/me')
                     router.push('/chat')
