@@ -23,17 +23,12 @@ const useAuth = () => {
             .then(res => {
                 run()
                 if (res.data) {
-                    Cookie.set('token', res.data.token, {
-                        expires: 1,
-                        secure: process.env.NODE_ENV === 'production' ? true : false,
-                        sameSite: 'none'
-
-                    })
+                    Cookie.set('token', res.data.token)
+                    localStorage.setItem('token', res.data.token)
                     message.success({ content: 'Login successful', key: 'login', duration: 2 })
                     mutate('/api/me')
                     router.push('/chat')
                 }
-
             })
             .catch(err => {
                 if (err) {
@@ -72,8 +67,10 @@ const useAuth = () => {
 
 
     const logout = async () => {
+
         await API.post('/api/logout')
         Cookie.remove('token')
+        localStorage.removeItem('token')
         router.reload()
         mutate(null)
 
