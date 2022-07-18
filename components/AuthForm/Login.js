@@ -87,16 +87,30 @@ const Login = () => {
                 <div className="flex flex-col md:flex-row items-center justify-between pb-6">
                     <button
                         onClick={() => {
-                            setGuestEmail('guest@welcome.com')
-                            setGuestPassword('SecureValidation@123')
+                            setGuestEmail('guestone@welcome.com')
+                            setGuestPassword('Safepassforguest123@')
                         }}
                         type="button"
                         className="inline-block px-6 py-2 border-2 border-red-600 text-red-600 font-medium text-xs leading-tight uppercase rounded-xl hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
 
                     >
-                        Log in with guest credentials
+                        Log in with guest one credentials
+                    </button>
+                </div>               
+                 <div className="flex flex-col md:flex-row items-center justify-between pb-6">
+                    <button
+                        onClick={() => {
+                            setGuestEmail('guesttwo@welcome.com')
+                            setGuestPassword('Safepassforguest123@')
+                        }}
+                        type="button"
+                        className="inline-block px-6 py-2 border-2 border-red-600 text-red-600 font-medium text-xs leading-tight uppercase rounded-xl hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+
+                    >
+                        Log in with guest two credentials
                     </button>
                     <p className="mb-3 mr-2 ">Don't have an account?</p>
+
                 </div>
             </form>
         </div>

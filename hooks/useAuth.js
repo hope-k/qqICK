@@ -9,7 +9,13 @@ const useAuth = () => {
     const { API } = http()
 
 
-    const { data: user, mutate } = useSwr('/api/me', () => API.get('/api/me').then(res => res.data.user))
+    const { data: user, mutate } = useSwr('/api/me', () => API.get('/api/me').then(res => res.data.user), {
+        revalidateOnFocus: false,
+        revalidateOnMount: true,
+        refreshInterval: 60000
+
+
+    })
     const login = async (credentials, setError) => {
         const run = message.loading({ content: 'Logging in...', key: 'login' })
         const { email, password } = credentials
