@@ -203,7 +203,6 @@ const Messages = ({
                                 />
                             )
                     }
-
                     <ConversationHeader.Content className='capitalize text-purple-400' userName={selectedChat?.isGroupChat ? selectedChat?.chatName : !selectedChat?.isGroupChat && (recipient?.name || recipientData?.name)} info={selectedChat?.isGroupChat ? 'Group' : (recipient?.status === 'available' || recipientData?.status === 'available' ? 'Active' : `Active ${moment(recipient?.updatedAt).fromNow()}` || `Active ${moment(recipientData?.updatedAt).fromNow()}`)} />
                     <ConversationHeader.Actions><div className='bg-purple-200 p-1 rounded-lg'>{selectedChat?.isGroupChat ? <AiOutlineEdit onClick={() => showGroupUpdateModal()} className='text-purple-600 text-2xl cursor-pointer' /> : <AiFillEye onClick={() => showGroupUpdateModal()} className='text-purple-600 text-2xl cursor-pointer' />}</div></ConversationHeader.Actions>
                 </ConversationHeader>
