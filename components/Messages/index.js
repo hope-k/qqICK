@@ -211,7 +211,7 @@ const Messages = ({
 
 
                 
-                <MessageList scrollBehavior="smooth" className='h-full' autoScrollToBottomOnMount={true} typingIndicator={isTyping ? <TypingIndicator className='capitalize' content={`${userTypingName} is typing`} /> : <></>}>
+                <MessageList scrollBehavior="smooth" autoScrollToBottomOnMount={true} typingIndicator={isTyping ? <TypingIndicator className='capitalize' content={`${userTypingName} is typing`} /> : <></>}>
 
 
 
@@ -259,7 +259,7 @@ const Messages = ({
                             )
                     }
                 </MessageList>
-                <MessageInput autoFocus attachButton={false} onSend={sendMessageIconHandler} placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
+                <MessageInput className='' autoFocus attachButton={false} onSend={sendMessageIconHandler} placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
             </ChatContainer>
         </div>
     )
