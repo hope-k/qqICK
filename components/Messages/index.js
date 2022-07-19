@@ -181,8 +181,8 @@ const Messages = ({
 
 
     return (
-        <div className='h-full w-full'>
-            <ChatContainer>
+        <div className='h-full w-full overflow-auto'>
+            <ChatContainer className='h-full'>
                 <ConversationHeader>
                     <ConversationHeader.Back className='p-1' onClick={() => setSelectedChat(null)} />
                     {
@@ -207,9 +207,11 @@ const Messages = ({
                     <ConversationHeader.Actions><div className='bg-purple-200 p-1 rounded-lg'>{selectedChat?.isGroupChat ? <AiOutlineEdit onClick={() => showGroupUpdateModal()} className='text-purple-600 text-2xl cursor-pointer' /> : <AiFillEye onClick={() => showGroupUpdateModal()} className='text-purple-600 text-2xl cursor-pointer' />}</div></ConversationHeader.Actions>
                 </ConversationHeader>
 
+           
 
 
-                <MessageList autoScrollToBottomOnMount={true} typingIndicator={isTyping ? <TypingIndicator className='capitalize' content={`${userTypingName} is typing`} /> : <></>}>
+                
+                <MessageList scrollBehavior="smooth" className='h-full' autoScrollToBottomOnMount={true} typingIndicator={isTyping ? <TypingIndicator className='capitalize' content={`${userTypingName} is typing`} /> : <></>}>
 
 
 
@@ -257,7 +259,7 @@ const Messages = ({
                             )
                     }
                 </MessageList>
-                <MessageInput onSend={sendMessageIconHandler} placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
+                <MessageInput autoFocus attachButton={false} onSend={sendMessageIconHandler} placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
             </ChatContainer>
         </div>
     )
