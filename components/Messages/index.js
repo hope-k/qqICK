@@ -181,9 +181,9 @@ const Messages = ({
 
 
     return (
-        <div className='w-full h-screen lg:'>
+        <div className='w-full h-screen'>
             <ChatContainer>
-                <ConversationHeader>
+                <ConversationHeader style={{position: 'sticky', top: '0'}}>
                     <ConversationHeader.Back className='p-1' onClick={() => setSelectedChat(null)} />
                     {
                         selectedChat?.isGroupChat ?
