@@ -236,7 +236,7 @@ export default function Chat() {
                         <Sidebar scrollable className='h-full w-full md:w-[25vw]' position="left" loading={chatLoading}>
                             {
                                 !chatLoading && (
-                                    <div className='border-purple-500 flex  rounded-lg p-1 m-3 bg-purple-100 appearance-none border  '>
+                                    <div className='border-purple-500 flex  rounded-lg p-1 m-3 bg-purple-100 appearance-none border mt-14  '>
                                         <input className='placeholder-purple-600 font-light h-full w-full bg-purple-100 outline-none' placeholder="Search..." onChange={e => setSearch(e.target.value)} value={search} />
                                         <div onClick={() => { setSearch('') }} className='cursor-pointer mr-2 flex justify-center items-center'><AiOutlineCloseCircle className='text-purple-500' /></div>
                                     </div>
