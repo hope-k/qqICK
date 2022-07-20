@@ -181,8 +181,8 @@ const Messages = ({
 
 
     return (
-        <div className='w-full '>
-            <ChatContainer>
+        <div className='w-full h-full'>
+            <ChatContainer className='h-full'>
                 <ConversationHeader>
                     <ConversationHeader.Back className='p-1' onClick={() => setSelectedChat(null)} />
                     {
