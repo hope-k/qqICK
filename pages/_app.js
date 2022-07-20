@@ -6,23 +6,30 @@ import '../styles/globals.scss'
 import '../styles/main.scss'
 import SocketProvider from '../context/socket'
 import NotificationsProvider from '../context/notifications'
+import { Head } from 'next/head'
+
 
 function MyApp({ Component, pageProps }) {
 
 
   return (
-    <NotificationsProvider>
-      <SocketProvider>
-        <SWRConfig
-          value={{
-            revalidateIfStale: true,
-            revalidateOnFocus: true,
-          }}
-        >
-          <Component {...pageProps} />
-        </SWRConfig>
-      </SocketProvider>
-    </NotificationsProvider>
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, height=device-height,  initial-scale=1.0, user-scalable=no, user-scalable=0;" />
+      </Head>
+      <NotificationsProvider>
+        <SocketProvider>
+          <SWRConfig
+            value={{
+              revalidateIfStale: true,
+              revalidateOnFocus: true,
+            }}
+          >
+            <Component {...pageProps} />
+          </SWRConfig>
+        </SocketProvider>
+      </NotificationsProvider>
+    </>
   )
 }
 

@@ -230,13 +230,13 @@ export default function Chat() {
     return (
         <>
             <Header selectedChat={selectedChat} setSelectedChat={setSelectedChat} isNotification={isNotification} setIsNotification={setIsNotification} />
-            <div className=' w-screen h-[85vh] absolute bottom-0 '>
+            <div className=''>
                 <MainContainer>
-                    <div style={{ scrollbarWidth: '1px' }} className={'h-full w-full md:w-[25vw] px-2 md:flex ' + (selectedChat ? 'hidden' : 'flex')}>
+                    <div style={{ scrollbarWidth: '1px' }} className={'h-screen w-full md:w-[25vw] px-2 md:flex ' + (selectedChat ? 'hidden' : 'flex')}>
                         <Sidebar scrollable className='h-full w-full md:w-[25vw]' position="left" loading={chatLoading}>
                             {
                                 !chatLoading && (
-                                    <div className='border-purple-500 flex  rounded-lg p-1 m-3 bg-purple-100 appearance-none border mt-20 md:mt-0  '>
+                                    <div className='border-purple-500 flex  rounded-lg p-1 m-3 bg-purple-100 appearance-none border'>
                                         <input className='placeholder-purple-600 font-light h-full w-full bg-purple-100 outline-none' placeholder="Search..." onChange={e => setSearch(e.target.value)} value={search} />
                                         <div onClick={() => { setSearch('') }} className='cursor-pointer mr-2 flex justify-center items-center'><AiOutlineCloseCircle className='text-purple-500' /></div>
                                     </div>
@@ -321,7 +321,7 @@ export default function Chat() {
 
                             ) :
                             (
-                                <div className='w-full h-full hidden md:flex '>
+                                <div className='w-full h-screen hidden md:flex '>
                                     <ChatContainer className='overflow-hidden '>
                                         <MessageList>
                                             <MessageList.Content className='flex flex-col justify-center items-center h-full text-base bg-slate-50 rounded-3xl'>
