@@ -6,7 +6,7 @@ import '../styles/globals.scss'
 import '../styles/main.scss'
 import SocketProvider from '../context/socket'
 import NotificationsProvider from '../context/notifications'
-import { Head } from 'next/head'
+import Head  from 'next/head'
 
 
 function MyApp({ Component, pageProps }) {
