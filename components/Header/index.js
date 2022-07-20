@@ -52,7 +52,7 @@ const Header = ({ setSelectedChat, setIsNotification, selectedChat }) => {
     );
     return (
         <>
-            <div className={'border-b-2 shadow-2xl bg-white w-full flex px-6 md:px-10 items-center h-[7.5vh] md:h-[8vh] z-50 sticky top-0 md:relative ' + (selectedChat && ' hidden md:flex ')}>
+            <div className={'border-b-2 shadow-2xl bg-white w-full flex px-6 md:px-10 items-center h-[7.5vh] md:h-[8vh] z-50 sticky top-0 md:fixed md:top-0 ' + (selectedChat && ' hidden md:flex ')}>
                 <div className='w-[7rem] md:w-16 md:h-full'>
                     <img src='/qheader.png' className='object-contain' />
                 </div>
