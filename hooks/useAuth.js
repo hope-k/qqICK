@@ -32,8 +32,9 @@ const useAuth = () => {
             })
             .catch(err => {
                 if (err) {
-                    setError(err.response.data.error)
-                    message.error({ content: err.response.data.error, key: 'login', duration: 5 })
+                    setError(err.response.data?.error)
+                    
+                    message.error({ content: err.response.data?.error, key: 'login', duration: 5 })
                 }
             })
     }
