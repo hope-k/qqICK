@@ -181,7 +181,7 @@ const Messages = ({
 
 
     return (
-        <div className='w-full h-full fixed top-0 md:relative '>
+        <div className='w-full h-full lg:h-screen fixed top-0 md:relative '>
             <ChatContainer>
                 <ConversationHeader className='fixed top-0 w-full'>
                     <ConversationHeader.Back className='p-1' onClick={() => setSelectedChat(null)} />
@@ -211,7 +211,7 @@ const Messages = ({
 
 
                 
-                <MessageList  scrollBehavior="smooth" autoScrollToBottomOnMount={true} typingIndicator={isTyping ? <TypingIndicator className='capitalize' content={`${userTypingName} is typing`} /> : <></>}>
+                <MessageList className='overflow-y-scroll' scrollBehavior="smooth" autoScrollToBottomOnMount={true} typingIndicator={isTyping ? <TypingIndicator className='capitalize' content={`${userTypingName} is typing`} /> : <></>}>
 
 
 
