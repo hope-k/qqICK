@@ -259,7 +259,7 @@ const Messages = ({
                             )
                     }
                 </MessageList>
-                <MessageInput className='fixed bottom-0' autoFocus attachButton={false} onSend={sendMessageIconHandler} placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
+                <MessageInput className='fixed bottom-0' autoFocus={false} attachButton={false} onSend={sendMessageIconHandler} placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
             </ChatContainer>
             </div>
     )
