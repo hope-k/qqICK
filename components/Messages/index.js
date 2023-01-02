@@ -181,7 +181,7 @@ const Messages = ({
 
 
     return (
-        <div className='w-full h-screen'>
+        <div className='w-full h-full fixed top-0'>
             <ChatContainer>
                 <ConversationHeader style={{position: 'sticky', top: '0'}}>
                     <ConversationHeader.Back className='p-1' onClick={() => setSelectedChat(null)} />
@@ -211,14 +211,14 @@ const Messages = ({
 
 
                 
-                <MessageList scrollBehavior="smooth" autoScrollToBottomOnMount={true} typingIndicator={isTyping ? <TypingIndicator className='capitalize' content={`${userTypingName} is typing`} /> : <></>}>
+                <MessageList  scrollBehavior="smooth" autoScrollToBottomOnMount={true} typingIndicator={isTyping ? <TypingIndicator className='capitalize' content={`${userTypingName} is typing`} /> : <></>}>
 
 
 
                     {
 
                         loadingMessages || !messages ? (
-                            <div className='flex justify-center items-center h-full'>
+                            <div className='flex justify-center items-center h-screen'>
                                 <Loader />
                             </div>
                         ) :
@@ -259,9 +259,9 @@ const Messages = ({
                             )
                     }
                 </MessageList>
-                <MessageInput className='' autoFocus attachButton={false} onSend={sendMessageIconHandler} placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
+                <MessageInput className='fixed bottom-0' autoFocus attachButton={false} onSend={sendMessageIconHandler} placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
             </ChatContainer>
-        </div>
+            </div>
     )
 }
 
