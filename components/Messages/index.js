@@ -211,7 +211,7 @@ const Messages = ({
 
 
                 
-                <MessageList className='overflow-y-scroll' scrollBehavior="smooth" autoScrollToBottomOnMount={true} typingIndicator={isTyping ? <TypingIndicator className='capitalize' content={`${userTypingName} is typing`} /> : <></>}>
+                <MessageList className='overflow-y-scroll py-20' scrollBehavior="smooth" autoScrollToBottomOnMount={true} typingIndicator={isTyping ? <TypingIndicator className='capitalize' content={`${userTypingName} is typing`} /> : <></>}>
 
 
 
@@ -259,7 +259,7 @@ const Messages = ({
                             )
                     }
                 </MessageList>
-                <MessageInput className='fixed bottom-0' autoFocus={true} attachButton={false} onSend={sendMessageIconHandler} placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
+                <MessageInput  className='fixed bottom-0' autoFocus={true} attachButton={false} onSend={sendMessageIconHandler} placeholder="Type message here" value={messageInputValue} onChange={typingHandler} onKeyDown={sendYourMessage} />
             </ChatContainer>
             </div>
     )

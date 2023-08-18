@@ -14,8 +14,8 @@ export default function http() {
             'Content-Type': 'application/json'
         },
     })
+
     //add token to request interceptor
-    
     API.interceptors.request.use(config => {
         const token = localStorage.getItem('token')
         if (token) {
@@ -24,7 +24,6 @@ export default function http() {
         return config
     })
 
-
     API.interceptors.response.use(res => res, err => {
         if (err.response.status === 401) {
             Cookies.remove('token')
@@ -32,6 +31,7 @@ export default function http() {
             router.push('/')
             return axios(err.config)
         }
+
         return Promise.reject(err)
     })
 
